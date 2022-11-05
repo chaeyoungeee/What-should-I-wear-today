@@ -6,7 +6,7 @@ import time
 user = [0]
 information = [None, None, None]
 
-token = 'MTAzODEyNzEzNTM2MzE4Njc0OA.GqiX81.0v8_VFShannhYzVX66HN7yrxXzynMhZGYV-VrA'
+token = ''
 intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix="?", intents=intents)
