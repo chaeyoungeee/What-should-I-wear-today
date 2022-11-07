@@ -1,6 +1,6 @@
 from sklearn.linear_model import LinearRegression
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 def predict_clothes(temp):
     temperature = []
@@ -29,4 +29,3 @@ def predict_clothes(temp):
     plt.plot(temperature, model.predict(temperature),color='r')
     plt.show()
     '''
-predict_clothes(19.3)
