@@ -2,23 +2,25 @@ import discord
 from discord.ui import Button, View
 from discord.ext import commands
 import time, sys, os
+import predict
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from crawling import temperature_crawling
 
 user = [0] # 더위 타는 정도
 information = [None, None, None] # 외출 장소, 출발 시간, 귀가 시간
-clothes = [ # 외투, 상의, 하의, 악세사리
-            [None, ("민소매", "반팔티"), ("반바지"), None], # 0
-            [None, ("반팔티","반팔 셔츠"), ("반바지", "린넨 바지"), None], # 1
-            [("얇은 가디건"), ("반팔티", "반팔 니트"), ("면바지", "청바지"), None], # 2
-            [("얇은 가디건"), ("셔츠", "긴팔티"), ("청바지", "얇은 슬랙스"), ("캡모자")], # 3
-            [("가디건"), ("얇은 니트", "맨투맨", "긴팔티"), ("청바지", "얇은 슬랙스"), ("캡모자")], # 4
-            [("가디건", "면자켓"), ("맨투맨", "후드티", "니트"), ("청바지", "슬랙스"), ("캡모자")], #5
-            [("바람막이", "청자켓", "항공 점퍼"), ("후드티", "니트"), ("슬랙스"), ("비니")], # 6
-            [("가죽 자켓", "트렌치 코트", "야상"), ("후드티", "니트"), ("슬랙스", "히트텍"),("비니")], # 7,
-            [("코트","가죽 자켓", "플리스"), ("기모 맨투맨", "기모 후드티", "울니트"), ("기모 바지", "히트텍"), ("장갑")], # 8
-            [("코트", "숏패딩", "양털 자켓", "플리스"), ("기모 후드티", "기모 맨투맨", "울니트", "히트텍"), ("기모 바지", "히드텍"), ("장갑", "귀마개")], # 9
-            [("롱패딩", "울코트", "털 플리스", "패딩 조끼"), ("융털 후드티", "융털 맨투맨", "울니트", "히트텍"), ("기모 바지", "히트텍"), ("장갑", "귀마개", "털모자")] # 10
+recommand = [None, None] # 외출 시간 평균 기온, 예측 옷 레벨
+clothes_level = [ # 옷 레벨(외투, 상의, 하의, 악세사리)
+            [None, "민소매, 반팔티", "반바지", None], # 0 레벨
+            [None, "반팔티, 반팔 셔츠", "반바지, 린넨 바지", None], # 1 레벨
+            ["얇은 가디건", "반팔티, 반팔 니트", "면바지, 청바지", None], # 2 레벨
+            ["얇은 가디건", "셔츠, 긴팔티", "청바지, 얇은 슬랙스", "캡모자"], # 3 레벨
+            ["가디건", "얇은 니트, 맨투맨, 긴팔티", "청바지, 얇은 슬랙스", "캡모자"], # 4 레벨
+            ["가디건, 면자켓", "맨투맨, 후드티, 니트", "청바지, 슬랙스", "캡모자"], # 5 레벨
+            ["바람막이, 청자켓, 항공 점퍼", "후드티, 니트", "슬랙스", "비니"], # 6 레벨
+            ["가죽 자켓, 트렌치 코트, 야상", "후드티, 니트", "슬랙스, 히트텍","비니"], # 7 레벨
+            ["코트,가죽 자켓, 플리스", "기모 맨투맨, 기모 후드티, 울니트", "기모 바지, 히트텍", "장갑"], # 8 레벨
+            ["코트, 숏패딩, 양털 자켓, 플리스", "기모 후드티, 기모 맨투맨, 울니트, 히트텍", "기모 바지, 히드텍", "장갑", "귀마개"], # 9 레벨
+            ["롱패딩, 울코트, 털 플리스, 패딩 조끼", "융털 후드티, 융털 맨투맨, 울니트, 히트텍", "기모 바지, 히트텍", "장갑, 귀마개, 털모자"] # 10 레벨
 ]
 
 token = ''
@@ -92,21 +94,21 @@ async def where(ctx):
     gangseo = Button(label="강서구", emoji="🤍")
     async def gangseo_callback(interaction):
         information[0] = "강서구"
-        await interaction.response.send_message(embed=discord.Embed(title="출발시간과 귀가시간을 입력해주세요!", description="?when 출발시간 도착시간\n(ex)?when 9 19"))
+        await interaction.response.send_message(embed=discord.Embed(title="출발시간과 귀가시간을 입력해주세요!", description="?when 출발시간 도착시간\n(ex) ?when 9 19"))
     gangseo.callback = gangseo_callback
     view.add_item(gangseo)
 
     gwanak = Button(label="관악구", emoji="🤍")
     async def gwanak_callback(interaction):
         information[0] = "관악구"
-        await interaction.response.send_message(embed=discord.Embed(title="출발시간과 귀가시간을 입력해주세요!", description="?when 출발시간 도착시간\n(ex)?when 9 19"))
+        await interaction.response.send_message(embed=discord.Embed(title="출발시간과 귀가시간을 입력해주세요!", description="?when 출발시간 도착시간\n(ex) ?when 9 19"))
     gwanak.callback = gwanak_callback
     view.add_item(gwanak)
 
     gwangjin = Button(label="광진구", emoji="🤍")
     async def gwangjin_callback(interaction):
         information[0] = "광진구"
-        await interaction.response.send_message(embed=discord.Embed(title="출발시간과 귀가시간을 입력해주세요!", description="?when 출발시간 도착시간\n(ex)?when 9 19"))
+        await interaction.response.send_message(embed=discord.Embed(title="출발시간과 귀가시간을 입력해주세요!", description="?when 출발시간 도착시간\n(ex) ?when 9 19"))
     gwangjin.callback = gwangjin_callback
     view.add_item(gwangjin)
 
@@ -252,17 +254,16 @@ async def when(ctx, arg1, arg2):
         await ctx.send("시간을 잘못 입력했어요! 다시 입력해주세요.")
     else:
         information[1], information[2] = int(arg1), int(arg2)
-
     await what(ctx)
 
+# 추천 옷 출력
 @bot.command()
 async def what(ctx):
-    await ctx.send(information[0])
-    await ctx.send(information[1])
-    await ctx.send(information[2])
     temp = temperature_crawling.time_temperature(information[0], information[1], information[2]) # 기온 정보 크롤링
-    temp_avg = sum(temp) / len(temp) # 외출 시간 동안 기온 평균
-    user_temp = temp_avg + user[0]  # 사용자 고려 기온
-    print(*temp)
+    temp_avg = round(sum(temp) / len(temp),3) # 외출 시간 동안 기온 평균
+    recommand[0] = temp_avg + user[0]  # 사용자 고려 기온
+    recommand[1] = predict.predict_clothes(recommand[0]) # 사용자 고려 기온 기준 예측
+    level = round(recommand[1])
+    await ctx.send(embed=discord.Embed(title=f"외출 시간 동안 평균 기온은 {temp_avg}°입니다!\n옷을 추천해드릴게요", description=f"외투: {clothes_level[level][0]}\n상의: {clothes_level[level][1]}\n하의: {clothes_level[level][2]}\n악세사리: {clothes_level[level][3]}\n"))
 
 bot.run(token)
