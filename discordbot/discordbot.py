@@ -6,9 +6,14 @@ import predict
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from crawling import temperature_crawling
 
+token = 'MTAzODEyNzEzNTM2MzE4Njc0OA.G8rToh.yKlU9viWeC2JwFy3qIox-srolmNZ8R7dq8BgQs'
+intents = discord.Intents.default()
+intents.message_content = True
+bot = commands.Bot(command_prefix="?", intents=intents)
+
 user = [0] # 더위 타는 정도
 information = [None, None, None] # 외출 장소, 출발 시간, 귀가 시간
-recommand = [None, None] # 외출 시간 평균 기온, 예측 옷 레벨
+recommand = [None, None, None] # 외출 시간 평균 기온, 예측 옷 레벨, 추천 옷 평가
 clothes_level = [ # 옷 레벨(외투, 상의, 하의, 악세사리)
             [None, "민소매, 반팔티", "반바지", None], # 0 레벨
             [None, "반팔티, 반팔 셔츠", "반바지, 린넨 바지", None], # 1 레벨
@@ -23,11 +28,6 @@ clothes_level = [ # 옷 레벨(외투, 상의, 하의, 악세사리)
             ["롱패딩, 울코트, 털 플리스, 패딩 조끼", "융털 후드티, 융털 맨투맨, 울니트, 히트텍", "기모 바지, 히트텍", "장갑, 귀마개, 털모자"] # 10 레벨
 ]
 
-token = 'MTAzODEyNzEzNTM2MzE4Njc0OA.GJ1zhp.akSNot4p0D0DFNLcRWgV9EeudCwzmFeSW81nOk'
-intents = discord.Intents.default()
-intents.message_content = True
-bot = commands.Bot(command_prefix="?", intents=intents)
-
 @bot.event
 async def on_ready():
     print(f'Login bot: {bot.user}')
@@ -37,12 +37,12 @@ async def on_ready():
 async def info(ctx):
     view = View()
 
-    less = Button(label="덜 타요", emoji="🤍")
-    default = Button(label="보통이에요", emoji="🤍")
-    more = Button(label="더 타요", emoji="🤍")
+    less = Button(label="덜 타요", emoji="🥶")
+    default = Button(label="보통이에요", emoji="😀")
+    more = Button(label="더 타요", emoji="🥵")
 
     async def less_callback(interaction):
-        user[0] = 2
+        user[0] = 1
         await interaction.response.send_message("외출할 때 입을 옷을 추천해드릴게요")
         await where(ctx)
 
@@ -52,7 +52,7 @@ async def info(ctx):
         await where(ctx)
 
     async def more_callback(interaction):
-        user[0] = -2
+        user[0] = -1
         await interaction.response.send_message("외출할 때 입을 옷을 추천해드릴게요")
         await where(ctx)
 
@@ -267,6 +267,58 @@ async def what(ctx):
     elif level > 10: recommand[1] = 10
     else: recommand[1] = round(level, 3)
     level = round(recommand[1])
-    await ctx.send(embed=discord.Embed(title=f"외출 시간 동안 평균 기온은 {temp_avg}°입니다!\n옷을 추천해드릴게요", description=f"외투: {clothes_level[level][0]}\n상의: {clothes_level[level][1]}\n하의: {clothes_level[level][2]}\n악세사리: {clothes_level[level][3]}\n"))
+    await ctx.send(embed=discord.Embed(title=f"{information[1]}시에서 {information[2]}시 사이 {information[0]}의 평균 기온은 {temp_avg}°입니다!\n옷을 추천해드릴게요", description=f"외투: {clothes_level[level][0]}\n상의: {clothes_level[level][1]}\n하의: {clothes_level[level][2]}\n악세사리: {clothes_level[level][3]}\n\n평가를 원하신다면 ?good을 입력해주세요"))
+
+# 추천 평가
+@bot.command()
+async def good(ctx):
+    view = View()
+    b1 = Button(label="많이 추웠어요", emoji="🥶")
+    async def b1_callback(interaction):
+        recommand[2] = -2
+        await interaction.response.send_message("반영해서 다음엔 더 따뜻한 옷을 추천해드릴게요!")
+        await write_temperature_level(ctx)
+    b1.callback = b1_callback
+    view.add_item(b1)
+
+    b2 = Button(label="살짝 추웠어요", emoji="🥶")
+    async def b2_callback(interaction):
+        recommand[2] = -1
+        await interaction.response.send_message("반영해서 다음엔 더 따뜻한 옷을 추천해드릴게요!")
+        await write_temperature_level(ctx)
+    b2.callback = b2_callback
+    view.add_item(b2)
+
+    b3 = Button(label="적당했어요", emoji="😀")
+    async def b3_callback(interaction):
+        recommand[2] = 0
+        await interaction.response.send_message("다음에 또 이용해주세요!")
+        await write_temperature_level(ctx)
+    b3.callback = b3_callback
+    view.add_item(b3)
+
+    b4 = Button(label="조금 더웠어요", emoji="🥵")
+    async def b4_callback(interaction):
+        recommand[2] = 1
+        await interaction.response.send_message("반영해서 다음엔 더 시원한 옷을 추천해드릴게요!")
+        await write_temperature_level(ctx)
+    b4.callback = b4_callback
+    view.add_item(b4)
+
+    b5 = Button(label="많이 더웠어요", emoji="🥵")
+    async def b5_callback(interaction):
+        recommand[2] = 2
+        await interaction.response.send_message("반영해서 다음엔 더 시원한 옷을 추천해드릴게요!")
+        await write_temperature_level(ctx)
+    b5.callback = b5_callback
+    view.add_item(b5)
+
+    await ctx.send(embed=discord.Embed(title="오늘 추천해드린 옷은 어땠나요?", description=""), view=view)
+
+# 평가 반영
+async def write_temperature_level(ctx):
+    f = open("./discordbot/temperature_clothes_level.txt", mode='a')
+    f.write(f"{recommand[0]+recommand[2]} {recommand[1]}\n")
+    f.close()
 
 bot.run(token)
