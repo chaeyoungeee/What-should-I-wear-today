@@ -6,7 +6,7 @@ import predict
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from crawling import temperature_crawling
 
-token = 'MTAzODEyNzEzNTM2MzE4Njc0OA.G8rToh.yKlU9viWeC2JwFy3qIox-srolmNZ8R7dq8BgQs'
+token = ''
 intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix="?", intents=intents)
