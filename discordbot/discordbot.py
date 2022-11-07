@@ -1,10 +1,25 @@
 import discord
 from discord.ui import Button, View
 from discord.ext import commands
-import time
+import time, sys, os
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+from crawling import temperature_crawling
 
-user = [0]
-information = [None, None, None]
+user = [0] # 더위 타는 정도
+information = [None, None, None] # 외출 장소, 출발 시간, 귀가 시간
+clothes = [ # 외투, 상의, 하의, 악세사리
+            [None, ("민소매", "반팔티"), ("반바지"), None], # 0
+            [None, ("반팔티","반팔 셔츠"), ("반바지", "린넨 바지"), None], # 1
+            [("얇은 가디건"), ("반팔티", "반팔 니트"), ("면바지", "청바지"), None], # 2
+            [("얇은 가디건"), ("셔츠", "긴팔티"), ("청바지", "얇은 슬랙스"), ("캡모자")], # 3
+            [("가디건"), ("얇은 니트", "맨투맨", "긴팔티"), ("청바지", "얇은 슬랙스"), ("캡모자")], # 4
+            [("가디건", "면자켓"), ("맨투맨", "후드티", "니트"), ("청바지", "슬랙스"), ("캡모자")], #5
+            [("바람막이", "청자켓", "항공 점퍼"), ("후드티", "니트"), ("슬랙스"), ("비니")], # 6
+            [("가죽 자켓", "트렌치 코트", "야상"), ("후드티", "니트"), ("슬랙스", "히트텍"),("비니")], # 7,
+            [("코트","가죽 자켓", "플리스"), ("기모 맨투맨", "기모 후드티", "울니트"), ("기모 바지", "히트텍"), ("장갑")], # 8
+            [("코트", "숏패딩", "양털 자켓", "플리스"), ("기모 후드티", "기모 맨투맨", "울니트", "히트텍"), ("기모 바지", "히드텍"), ("장갑", "귀마개")], # 9
+            [("롱패딩", "울코트", "털 플리스", "패딩 조끼"), ("융털 후드티", "융털 맨투맨", "울니트", "히트텍"), ("기모 바지", "히트텍"), ("장갑", "귀마개", "털모자")] # 10
+]
 
 token = ''
 intents = discord.Intents.default()
@@ -14,7 +29,6 @@ bot = commands.Bot(command_prefix="?", intents=intents)
 @bot.event
 async def on_ready():
     print(f'Login bot: {bot.user}')
-
 
 # 더위 타는 정도 버튼
 @bot.command()
@@ -26,16 +40,19 @@ async def info(ctx):
     more = Button(label="더 타요", emoji="🤍")
 
     async def less_callback(interaction):
-        user[0] = -2
-        await interaction.response.send_message("1")
+        user[0] = 2
+        await interaction.response.send_message("외출할 때 입을 옷을 추천해드릴게요")
+        await where(ctx)
 
     async def default_callback(interaction):
         user[0] = 0
-        await interaction.response.send_message("1")
+        await interaction.response.send_message("외출할 때 입을 옷을 추천해드릴게요")
+        await where(ctx)
 
     async def more_callback(interaction):
-        user[0] = 2
-        await interaction.response.send_message("1")
+        user[0] = -2
+        await interaction.response.send_message("외출할 때 입을 옷을 추천해드릴게요")
+        await where(ctx)
 
     less.callback = less_callback
     default.callback = default_callback
@@ -222,7 +239,7 @@ async def where(ctx):
     jungrang = Button(label="중랑구", emoji="🤍")
     async def jungrang_callback(interaction):
         information[0] = "중랑구"
-        await interaction.response.send_message(embed=discord.Embed(title="출발시간과 귀가시간을 입력해주세요!", description="?when 출발시간 귀가시간\n(ex)?when 9 19"))
+        await interaction.response.send_message(embed=discord.Embed(title="출발시간과 귀가시간을 입력해주세요!", description="?when 출발시간 도착시간\n(ex)?when 9 19"))
     jungrang.callback = jungrang_callback
     view.add_item(jungrang)
 
@@ -231,18 +248,21 @@ async def where(ctx):
 # 출발 시간, 귀가 시간 입력
 @bot.command()
 async def when(ctx, arg1, arg2):
-    if int(arg1) <= time.localtime().tm_hour or int(arg2) < int(arg1) or int(arg1) > 24 or int(arg2) > 24 or int(arg1) < 0 or int(arg2) < 0:
-        await ctx.send("시간을 잘못 입력했어요!")
+    if int(arg1) < time.localtime().tm_hour or int(arg2) < int(arg1) or int(arg1) > 24 or int(arg2) > 24 or int(arg1) < 0 or int(arg2) < 0:
+        await ctx.send("시간을 잘못 입력했어요! 다시 입력해주세요.")
     else:
         information[1], information[2] = int(arg1), int(arg2)
 
-''' test
+    await what(ctx)
+
 @bot.command()
-async def info2(ctx):
+async def what(ctx):
     await ctx.send(information[0])
     await ctx.send(information[1])
     await ctx.send(information[2])
-    await ctx.send(user[0])
-'''
+    temp = temperature_crawling.time_temperature(information[0], information[1], information[2]) # 기온 정보 크롤링
+    temp_avg = sum(temp) / len(temp) # 외출 시간 동안 기온 평균
+    user_temp = temp_avg + user[0]  # 사용자 고려 기온
+    print(*temp)
 
 bot.run(token)
