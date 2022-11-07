@@ -23,7 +23,7 @@ clothes_level = [ # 옷 레벨(외투, 상의, 하의, 악세사리)
             ["롱패딩, 울코트, 털 플리스, 패딩 조끼", "융털 후드티, 융털 맨투맨, 울니트, 히트텍", "기모 바지, 히트텍", "장갑, 귀마개, 털모자"] # 10 레벨
 ]
 
-token = ''
+token = 'MTAzODEyNzEzNTM2MzE4Njc0OA.GJ1zhp.akSNot4p0D0DFNLcRWgV9EeudCwzmFeSW81nOk'
 intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix="?", intents=intents)
@@ -262,7 +262,10 @@ async def what(ctx):
     temp = temperature_crawling.time_temperature(information[0], information[1], information[2]) # 기온 정보 크롤링
     temp_avg = round(sum(temp) / len(temp),3) # 외출 시간 동안 기온 평균
     recommand[0] = temp_avg + user[0]  # 사용자 고려 기온
-    recommand[1] = predict.predict_clothes(recommand[0]) # 사용자 고려 기온 기준 예측
+    level = predict.predict_clothes(recommand[0]) # 사용자 고려 기온 기준 예측
+    if level < 0: recommand[1] = 0
+    elif level > 10: recommand[1] = 10
+    else: recommand[1] = round(level, 3)
     level = round(recommand[1])
     await ctx.send(embed=discord.Embed(title=f"외출 시간 동안 평균 기온은 {temp_avg}°입니다!\n옷을 추천해드릴게요", description=f"외투: {clothes_level[level][0]}\n상의: {clothes_level[level][1]}\n하의: {clothes_level[level][2]}\n악세사리: {clothes_level[level][3]}\n"))
 
