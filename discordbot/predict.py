@@ -13,7 +13,7 @@ def predict_clothes(temp):
         if line[0][0] == '-': line[0] = float(line[0][1:])*(-1)
         else: line[0] = float(line[0])
         temperature.append(line[0])
-        clothes_level.append(int(line[1]))
+        clothes_level.append(float(line[1]))
     f.close()
     temperature = np.reshape(temperature, (-1,1))
     model = LinearRegression()
