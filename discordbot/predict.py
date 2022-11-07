@@ -5,7 +5,7 @@ import numpy as np
 def predict_clothes(temp):
     temperature = []
     clothes_level = []
-    f = open("./temperature_clothes_level.txt", mode='r')
+    f = open("/Users/limchaeyoung/oss/discordbot/temperature_clothes_level.txt", mode='r')
     while True:
         line = f.readline()
         line = line.split()
@@ -21,11 +21,11 @@ def predict_clothes(temp):
     predict_clothes_level = model.predict([[temp]])[0]
     return predict_clothes_level
 
-    '''
+'''
     plt.xlabel("temperature")
     plt.ylabel("clothes_level")
     plt.plot(temperature, clothes_level, 'k.')
     plt.axis([-20,40,0,10])
-    plt.plot(temperature, model.predict(temperature),color='r')
+    plt.plot(temperature, model.predict(temperature), color='r')
     plt.show()
-    '''
+'''
