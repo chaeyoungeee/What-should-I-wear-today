@@ -3,15 +3,16 @@ from discord.ui import Button, View
 from discord.ext import commands
 import time, sys, os
 import predict
+import user_data
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from crawling import temperature_crawling
 
-token = ''
+token = 'MTAzODEyNzEzNTM2MzE4Njc0OA.GA0u7p.3jfPHRHo6PqYT1hwR1niOGEjKs4--fGLdKSoc4'
 intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix="?", intents=intents)
 
-user = [0] # 더위 타는 정도
+hot_level = [0] # 더위 타는 정도
 information = [None, None, None] # 외출 장소, 출발 시간, 귀가 시간
 recommand = [None, None, None] # 외출 시간 평균 기온, 예측 옷 레벨, 추천 옷 평가
 clothes_level = [ # 옷 레벨(외투, 상의, 하의, 악세사리)
@@ -32,28 +33,39 @@ clothes_level = [ # 옷 레벨(외투, 상의, 하의, 악세사리)
 async def on_ready():
     print(f'Login bot: {bot.user}')
 
+# 유저 정보 엑셀 파일에 신규 등록 or 유저 정보 불러오기
+async def user_info(ctx):
+    if user_data.check_exist(ctx.author.name, ctx.author.id):
+        user_data.sign_up(ctx.author.name, ctx.author.id)
+    else:
+        hot_level[0], recommand[0], recommand[1] = user_data.user_save_info(ctx.author.name, ctx.author.id)
+
 # 더위 타는 정도 버튼
 @bot.command()
 async def info(ctx):
-    view = View()
+    await user_info(ctx)  # 유저 정보 엑셀 파일에 신규 등록 or 유저 정보 불러오기
 
+    view = View()
     less = Button(label="덜 타요", emoji="🥶")
     default = Button(label="보통이에요", emoji="😀")
     more = Button(label="더 타요", emoji="🥵")
 
     async def less_callback(interaction):
-        user[0] = 1
+        hot_level[0] = 1
         await interaction.response.send_message("외출할 때 입을 옷을 추천해드릴게요")
+        user_data.hot_level_update(ctx.author.name, ctx.author.id, hot_level[0])
         await where(ctx)
 
     async def default_callback(interaction):
-        user[0] = 0
+        hot_level[0] = 0
         await interaction.response.send_message("외출할 때 입을 옷을 추천해드릴게요")
+        user_data.hot_level_update(ctx.author.name, ctx.author.id, hot_level[0])
         await where(ctx)
 
     async def more_callback(interaction):
-        user[0] = -1
+        hot_level[0] = -1
         await interaction.response.send_message("외출할 때 입을 옷을 추천해드릴게요")
+        user_data.hot_level_update(ctx.author.name, ctx.author.id, hot_level[0])
         await where(ctx)
 
     less.callback = less_callback
@@ -251,7 +263,7 @@ async def where(ctx):
 @bot.command()
 async def when(ctx, arg1, arg2):
     if int(arg1) < time.localtime().tm_hour or int(arg2) < int(arg1) or int(arg1) > 24 or int(arg2) > 24 or int(arg1) < 0 or int(arg2) < 0:
-        await ctx.send("시간을 잘못 입력했어요! 다시 입력해주세요.")
+        await ctx.send("시간을 잘못 입력했어요! 다시 입력해주세요")
     else:
         information[1], information[2] = int(arg1), int(arg2)
     await what(ctx)
@@ -259,14 +271,16 @@ async def when(ctx, arg1, arg2):
 # 추천 옷 출력
 @bot.command()
 async def what(ctx):
+    await user_info(ctx)
     temp = temperature_crawling.time_temperature(information[0], information[1], information[2]) # 기온 정보 크롤링
-    temp_avg = round(sum(temp) / len(temp),3) # 외출 시간 동안 기온 평균
-    recommand[0] = temp_avg + user[0]  # 사용자 고려 기온
+    temp_avg = round(sum(temp) / len(temp), 3) # 외출 시간 동안 기온 평균
+    recommand[0] = temp_avg + hot_level[0]  # 사용자 고려 기온
     level = predict.predict_clothes(recommand[0]) # 사용자 고려 기온 기준 예측
     if level < 0: recommand[1] = 0
     elif level > 10: recommand[1] = 10
     else: recommand[1] = round(level, 3)
     level = round(recommand[1])
+    user_data.info_update(ctx.author.name, ctx.author.id, recommand[0], level)
     await ctx.send(embed=discord.Embed(title=f"{information[1]}시에서 {information[2]}시 사이 {information[0]}의 평균 기온은 {temp_avg}°입니다!\n옷을 추천해드릴게요", description=f"외투: {clothes_level[level][0]}\n상의: {clothes_level[level][1]}\n하의: {clothes_level[level][2]}\n악세사리: {clothes_level[level][3]}\n\n평가를 원하신다면 ?good을 입력해주세요"))
 
 # 추천 평가
@@ -317,7 +331,8 @@ async def good(ctx):
 
 # 평가 반영
 async def write_temperature_level(ctx):
-    f = open("./discordbot/temperature_clothes_level.txt", mode='a')
+    await user_info(ctx)
+    f=open("./discordbot/temperature_clothes_level.txt", mode='a')
     f.write(f"{recommand[0]+recommand[2]} {recommand[1]}\n")
     f.close()
 
