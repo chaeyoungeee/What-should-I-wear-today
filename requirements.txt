@@ -1,8 +1,12 @@
-discord.py
+discord
 asyncio
 Button
-View
 commands
 time
 sys
 os
+requests
+BeautifulSoup
+LinearRegression
+numpy
+load_workbook
