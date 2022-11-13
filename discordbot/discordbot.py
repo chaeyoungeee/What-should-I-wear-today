@@ -7,7 +7,6 @@ import user_data
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from crawling import temperature_crawling
 
-token = ''
 intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix="?", intents=intents)
@@ -336,4 +335,4 @@ async def write_temperature_level(ctx):
     f.write(f"{recommand[0]+recommand[2]} {recommand[1]}\n")
     f.close()
 
-bot.run(token)
+bot.run(os.environ['token'])
