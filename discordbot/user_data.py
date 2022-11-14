@@ -1,52 +1,36 @@
-from openpyxl import load_workbook
+import gspread
 
-c_name=1
-c_id=2
-c_hot_level=3
-c_avg_temperature=4
-c_clothes_level=5
+scope = ['https://spreadsheets.google.com/feeds',
+         'https://www.googleapis.com/auth/drive']
+gc = gspread.service_account(filename='./discordbot/key.json')
 
-wb = load_workbook("./discordbot/userDB.xlsx", data_only=True)
-ws = wb.active
+ws = gc.open("user_DB").worksheet('sheets1')
+id_data = ws.col_values(2)
 
-def check_row():
-    for row in range(2, ws.max_row+2):
-        if ws.cell(row, c_name).value is None:
-            return row
-
-
-def check_exist(name, id):
-    for row in range(2, ws.max_row+1):
-        if ws.cell(row, c_name).value == name and ws.cell(row, c_id).value == hex(id):
-            return False
-    return True
+def check_exist(id):
+    for i in id_data:
+        if hex(id) == i:
+            return True
+    return False
 
 def sign_up(name, id):
-    _row = check_row()
-    ws.cell(row=_row, column=c_name, value=name)
-    ws.cell(row=_row, column=c_id, value=hex(id))
-    ws.cell(row=_row, column=c_hot_level, value=0)
-    ws.cell(row=_row, column=c_avg_temperature, value=None)
-    ws.cell(row=_row, column=c_clothes_level, value=None)
-    wb.save("./discordbot/userDB.xlsx")
+    ws.insert_row([name, id, 0, None, None], len(ws.col_values(2))+1)
 
-def hot_level_update(name, id, hot_level):
-    for row in range(2, ws.max_row+1):
-        if ws.cell(row, c_name).value == name and ws.cell(row, c_id).value == hex(id):
-            ws.cell(row=row, column=c_hot_level, value=hot_level)
-            wb.save("./discordbot/userDB.xlsx")
-            return
+def hot_level_update(id, hot_level):
+    for idx, i in enumerate(id_data):
+        if hex(id) == i:
+            ws.update_acell(f'C{idx+1}', hot_level)
 
-def info_update(name, id, avg_temperature, clothes_level):
-    for row in range(2, ws.max_row+1):
-        if ws.cell(row, c_name).value == name and ws.cell(row, c_id).value == hex(id):
-            ws.cell(row=row, column=c_avg_temperature, value=avg_temperature)
-            ws.cell(row=row, columnc=c_clothes_level, value=clothes_level)
-            wb.save("./discordbot/userDB.xlsx")
+
+def info_update(id, avg_temperature, clothes_level):
+    for idx, i in enumerate(id_data):
+        if hex(id) == i:
+            ws.update_acell(f'D{idx+1}', avg_temperature)
+            ws.update_acell(f'E{idx+1}', clothes_level)
             return
 
 def user_save_info(name, id):
-    for row in range(2, ws.max_row+1):
-        if ws.cell(row, c_name).value == name and ws.cell(row, c_id).value == hex(id):
-            return ws.cell(row, c_hot_level).value, ws.cell(row, c_avg_temperature).value, ws.cell(row, c_clothes_level).value
+    for idx, i in enumerate(id_data):
+        if hex(id) == i:
+            return float(ws.acell(f'C{idx+1}').value), float(ws.acell(f'D{idx+1}').value), float(ws.acell(f'E{idx+1}').value)
     return 0, None, None

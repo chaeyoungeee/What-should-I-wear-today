@@ -2,6 +2,7 @@ import discord
 from discord.ui import Button, View
 from discord.ext import commands
 import time, sys, os
+import gspread
 import predict
 import user_data
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
@@ -34,11 +35,10 @@ async def on_ready():
 
 # 유저 정보 엑셀 파일에 신규 등록 or 유저 정보 불러오기
 async def user_info(ctx):
-    if user_data.check_exist(ctx.author.name, ctx.author.id):
-        user_data.sign_up(ctx.author.name, ctx.author.id)
-    else:
+    if user_data.check_exist(ctx.author.id):
         hot_level[0], recommand[0], recommand[1] = user_data.user_save_info(ctx.author.name, ctx.author.id)
-
+    else:
+        user_data.sign_up(ctx.author.id)
 # 더위 타는 정도 버튼
 @bot.command()
 async def info(ctx):
@@ -52,19 +52,19 @@ async def info(ctx):
     async def less_callback(interaction):
         hot_level[0] = 1
         await interaction.response.send_message("외출할 때 입을 옷을 추천해드릴게요")
-        user_data.hot_level_update(ctx.author.name, ctx.author.id, hot_level[0])
+        user_data.hot_level_update(ctx.author.id, hot_level[0])
         await where(ctx)
 
     async def default_callback(interaction):
         hot_level[0] = 0
         await interaction.response.send_message("외출할 때 입을 옷을 추천해드릴게요")
-        user_data.hot_level_update(ctx.author.name, ctx.author.id, hot_level[0])
+        user_data.hot_level_update(ctx.author.id, hot_level[0])
         await where(ctx)
 
     async def more_callback(interaction):
         hot_level[0] = -1
         await interaction.response.send_message("외출할 때 입을 옷을 추천해드릴게요")
-        user_data.hot_level_update(ctx.author.name, ctx.author.id, hot_level[0])
+        user_data.hot_level_update(ctx.author.id, hot_level[0])
         await where(ctx)
 
     less.callback = less_callback
@@ -279,7 +279,7 @@ async def what(ctx):
     elif level > 10: recommand[1] = 10
     else: recommand[1] = round(level, 3)
     level = round(recommand[1])
-    user_data.info_update(ctx.author.name, ctx.author.id, recommand[0], level)
+    user_data.info_update(ctx.author.id, recommand[0], level)
     await ctx.send(embed=discord.Embed(title=f"{information[1]}시에서 {information[2]}시 사이 {information[0]}의 평균 기온은 {temp_avg}°입니다!\n옷을 추천해드릴게요", description=f"외투: {clothes_level[level][0]}\n상의: {clothes_level[level][1]}\n하의: {clothes_level[level][2]}\n악세사리: {clothes_level[level][3]}\n\n평가를 원하신다면 ?good을 입력해주세요"))
 
 # 추천 평가
@@ -331,8 +331,10 @@ async def good(ctx):
 # 평가 반영
 async def write_temperature_level(ctx):
     await user_info(ctx)
-    f=open("./discordbot/temperature_clothes_level.txt", mode='a')
-    f.write(f"{recommand[0]+recommand[2]} {recommand[1]}\n")
-    f.close()
+    scope = ['https://spreadsheets.google.com/feeds',
+             'https://www.googleapis.com/auth/drive']
+    gc = gspread.service_account(filename='./discordbot/key.json')
+    ws = gc.open("temperature_clothes_level").worksheet('sheets1')
+    ws.append_row([recommand[0]+recommand[2], recommand[1]])
 
 bot.run(os.environ['token'])
