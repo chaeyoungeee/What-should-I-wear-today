@@ -22,7 +22,7 @@ user_data.py: 사용자의 데이터를 구글 스프레드시트에 저장하�
 ```
 
 ## ❗️Running
-![info](https://github.com/chaeyoungeee/What-should-I-wear-today/blob/main/img/info.png){: width="50%"}
+![info](https://github.com/chaeyoungeee/What-should-I-wear-today/blob/main/img/info.png){: width="200" height="100"}
 
 ## ❗️Reference
 
