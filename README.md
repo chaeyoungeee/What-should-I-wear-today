@@ -16,6 +16,7 @@
 <img src="./img/where.png" width="70%"/>
 <img src="./img/when.png" width="70%"/>
 <img src="./img/good.png" width="70%"/>
+(조금 추웠어요 선택)
 
 
 
