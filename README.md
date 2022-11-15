@@ -9,6 +9,12 @@
 - `?what` 을 입력하면 사용자가 입력한 외출 장소와 외출 시간을 기반으로 저장된 평균 기온을 이용해 외출할 때 입을 옷을 추천해줍니다.
 - `?good`을 입력하면 봇이 추천해준 옷에 대한 평가를 할 수 있습니다. 평가한 정보는 기온 별 옷 레벨 data set에 저장되어, 후에 옷을 추천해줄 때 반영됩니다.
 
+## ❗️Running
+<img src="./img/info1.png" width="70%"/>
+<img src="./img/where.png" width="70%"/>
+<img src="./img/when.png" width="70%"/>
+<img src="./img/good.png" width="70%"/>
+
 ## ❗️Folder file
 - crawling
 ```
@@ -20,13 +26,6 @@ discordbot.py: discord bot을 돌리는 main 파일입니다.
 predict.py: 기온 별 옷 레벨 data set을 기반으로 선형 회귀를 이용해 기온에 맞는 옷 레벨을 예측해주는 함수를 담은 파일입니다.
 user_data.py: 사용자의 데이터를 구글 스프레드시트에 저장하고 불러오는 함수를 모아놓은 파일입니다.
 ```
-
-## ❗️Running
-<img src="./img/info1.png" width="70%"/>
-<img src="./img/where.png" width="70%"/>
-<img src="./img/when.png" width="70%"/>
-<img src="./img/good.png" width="70%"/>
-
 
 ## ❗️Reference
 
