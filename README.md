@@ -23,7 +23,7 @@
 ## ❗️Folder file
 - crawling
 ```
-	@@ -31,16 +30,15 @@ temperature_crawling.py: 사용자가 입력한 외출 장소와 외출 시간
+temperature_crawling.py: 사용자가 입력한 외출 장소와 외출 시간
 discordbot.py: discord bot을 돌리는 main 파일입니다.
 predict.py: 기온 별 옷 레벨 data set을 기반으로 선형 회귀를 이용해 기온에 맞는 옷 레벨을 예측해주는 함수를 담은 파일입니다.
 user_data.py: 사용자의 데이터를 구글 스프레드시트에 저장하고 불러오는 함수를 모아놓은 파일입니다.
