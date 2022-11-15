@@ -27,7 +27,7 @@
 ## ❗️Folder file
 - crawling
 ```
-temperature_crawling.py: 사용자가 입력한 외출 장소와 외출 시간을 기반으로 크롤링한 기온 리턴해주는 함수를 담은 파일입니다.
+temperature_crawling.py: 사용자가 입력한 외출 장소와 외출 시간을 기반으로 크롤링한 기온 리스트를 return해주는 함수를 담은 파일입니다.
 ```
 - discordbot
 ```
