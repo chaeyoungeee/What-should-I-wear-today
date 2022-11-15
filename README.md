@@ -22,7 +22,7 @@ user_data.py: 사용자의 데이터를 구글 스프레드시트에 저장하�
 ```
 
 ## ❗️Running
-<img src="./img/info.png" width="50%"/>
+<img src="./img/info.png" width="70%"/>
 
 ## ❗️Reference
 
