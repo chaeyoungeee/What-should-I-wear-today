@@ -34,8 +34,4 @@ user_data.py: 사용자의 데이터를 구글 스프레드시트에 저장하�
 
 [파이썬을 이용한 구글시트 읽고 쓰기 | Google SpreadSheets API | JMON](https://velog.io/@jmon/%EA%B5%AC%EA%B8%80%EC%8B%9C%ED%8A%B8-API-%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EC%9D%BD%EA%B3%A0-%EC%93%B0%EA%B8%B0-Google-SpreadSheets-API-JMON)  
 
-
-
-## ❗️Developer
-
 ## ❗️License
