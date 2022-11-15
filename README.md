@@ -1,4 +1,4 @@
- 👕오늘 뭐 입지?  (Discord Bot-What should I wear today?)
+ 👕오늘 뭐 입지? 디스코드 봇 (Discord Bot-What should I wear today?)
  =============
 <img src="./img/2.png" width="20%"/>
 ## ❗️Description
