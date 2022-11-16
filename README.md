@@ -21,10 +21,13 @@
 ## ❗️Running
 > ?info를 입력해 자신이 더위타는 정도를 선택합니다.
 <img src="./img/info1.png" width="90%"/>
+
 > 외출할 장소를 선택합니다.
 <img src="./img/where.png" width="90%"/>
+
 > 외출할 시간을 입력하고 외출 시 착용할 옷을 추천 받습니다.
 <img src="./img/when.png" width="90%"/>
+
 > ?good을 입력해 추천 받은 옷에 대한 평가를 합니다.
 <img src="./img/good.png" width="90%"/>  
 
