@@ -43,9 +43,18 @@ user_data.py: 사용자의 데이터를 구글 스프레드시트에 저장하�
 
 [[Discord.py] 1. 디스코드 봇 개발의 기초](https://www.jongung.com/199)  
 
+[디스코드 봇 만들기2](https://intunknown.tistory.com/618)
+
+[2.6 사이트 정보 추출하기 - beautifulsoup 사용법 (1)](https://wikidocs.net/85739)
+
+[20/03/07 파이썬 웹 크롤링 (2) - 네이버 날씨 크롤링하기](https://velog.io/@magnoliarfsit/%ED%8C%8C%EC%9D%B4%EC%8D%AC-%EC%9B%B9-%ED%81%AC%EB%A1%A4%EB%A7%81-2-%EB%84%A4%EC%9D%B4%EB%B2%84-%EB%82%A0%EC%94%A8-%ED%81%AC%EB%A1%A4%EB%A7%81%ED%95%98%EA%B8%B0)
+
+[Python: BeautifulSoup 라이브러리 정리(find, find_all, 태그, 클래스, id, 속성)](https://seungjuitmemo.tistory.com/203)
+
 [[KR] Python으로 구글 스프레드시트 연동하기 (ft. gspread)](https://lucaseo.github.io/posts/2020-04-12-python-spreadsheet-gspread/)  
 
 [파이썬을 이용한 구글시트 읽고 쓰기 | Google SpreadSheets API | JMON](https://velog.io/@jmon/%EA%B5%AC%EA%B8%80%EC%8B%9C%ED%8A%B8-API-%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EC%9D%BD%EA%B3%A0-%EC%93%B0%EA%B8%B0-Google-SpreadSheets-API-JMON)  
 
+[선형회귀(Linear Regression) – 파이썬 코드 예제](https://hleecaster.com/ml-linear-regression-example/)
 
 ## ❗️License
