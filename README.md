@@ -24,17 +24,17 @@
 
 
 ## ❗️Running
-> ?info를 입력해 자신이 더위타는 정도를 선택합니다.
-<img src="./img/정보.png" width="90%"/>
+> !정보를 입력해 자신이 더위타는 정도를 선택합니다.
+<img src="https://github.com/chaeyoungeee/What-should-I-wear-today/blob/main/img/%E1%84%8C%E1%85%A5%E1%86%BC%E1%84%87%E1%85%A9.png" width="90%"/>
 
 > 외출할 장소를 선택합니다.
-<img src="./img/어디.png" width="90%"/>
+<img src="https://github.com/chaeyoungeee/What-should-I-wear-today/blob/main/img/%E1%84%8B%E1%85%A5%E1%84%83%E1%85%B5.png" width="90%"/>
 
 > 외출할 시간을 입력하고 외출 시 착용할 옷을 추천 받습니다.
-<img src="./img/언제.png" width="90%"/>
+<img src="https://github.com/chaeyoungeee/What-should-I-wear-today/blob/main/img/%E1%84%8B%E1%85%A5%E1%86%AB%E1%84%8C%E1%85%A6.png" width="90%"/>
 
-> ?good을 입력해 추천 받은 옷에 대한 평가를 합니다.
-<img src="./img/평가.png" width="90%"/>  
+> !평가를 입력해 추천 받은 옷에 대한 평가를 합니다.
+<img src="https://github.com/chaeyoungeee/What-should-I-wear-today/blob/main/img/%E1%84%91%E1%85%A7%E1%86%BC%E1%84%80%E1%85%A1.png" width="90%"/>  
 
 ## ❗️Folder file
 - crawling
