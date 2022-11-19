@@ -67,4 +67,4 @@ user_data.py: 사용자의 데이터를 구글 스프레드시트에 저장하�
 
 
 ## ❗️License
-**"오늘 뭐 입지?"** 디스코드 봇은 MIT License를 따릅니다.
+이 프로젝트는 MIT License를 따릅니다.
