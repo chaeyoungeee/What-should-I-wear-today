@@ -14,13 +14,12 @@ def check_exist(id):
     return False
 
 def sign_up(name, id):
-    ws.insert_row([name, id, 0, None, None], len(ws.col_values(2))+1)
+    ws.insert_row([name, hex(id), 0, 0, 0], len(ws.col_values(2))+1)
 
 def hot_level_update(id, hot_level):
     for idx, i in enumerate(id_data):
         if hex(id) == i:
             ws.update_acell(f'C{idx+1}', hot_level)
-
 
 def info_update(id, avg_temperature, clothes_level):
     for idx, i in enumerate(id_data):
@@ -29,7 +28,7 @@ def info_update(id, avg_temperature, clothes_level):
             ws.update_acell(f'E{idx+1}', clothes_level)
             return
 
-def user_save_info(name, id):
+def user_save_info(id):
     for idx, i in enumerate(id_data):
         if hex(id) == i:
             return float(ws.acell(f'C{idx+1}').value), float(ws.acell(f'D{idx+1}').value), float(ws.acell(f'E{idx+1}').value)
