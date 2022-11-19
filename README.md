@@ -30,7 +30,7 @@
 > 외출할 장소를 선택합니다.
 <img src="https://github.com/chaeyoungeee/What-should-I-wear-today/blob/main/img/%E1%84%8B%E1%85%A5%E1%84%83%E1%85%B5.png" width="90%"/>
 
-> 외출할 시간을 입력하고 외출 시 착용할 옷을 추천 받습니다.
+> 외출할 시간(!언제 출발시간 귀가시간)을 입력하고 외출 시 착용할 옷을 추천 받습니다.
 <img src="https://github.com/chaeyoungeee/What-should-I-wear-today/blob/main/img/%E1%84%8B%E1%85%A5%E1%86%AB%E1%84%8C%E1%85%A6.png" width="90%"/>
 
 > !평가를 입력해 추천 받은 옷에 대한 평가를 합니다.
