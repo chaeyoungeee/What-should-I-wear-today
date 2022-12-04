@@ -10,7 +10,7 @@ from crawling import temperature_crawling
 
 intents = discord.Intents.default()
 intents.message_content = True
-bot = commands.Bot(command_prefix="!", intents=intents)
+bot = commands.Bot(command_prefix="?", intents=intents)
 
 hot_level = [0] # 더위 타는 정도
 information = [None, None, None] # 외출 장소, 출발 시간, 귀가 시간
@@ -289,7 +289,7 @@ async def 추천(ctx):
 @bot.command()
 async def 평가(ctx):
     view = View()
-    b1 = Button(label="많이 추웠어요", emoji="🥶💙")
+    b1 = Button(label="많이 추웠어요", emoji="🥶")
     async def b1_callback(interaction):
         recommand[2] = -2
         await interaction.response.send_message("반영해서 다음엔 더 따뜻한 옷을 추천해드릴게요!")
@@ -321,7 +321,7 @@ async def 평가(ctx):
     b4.callback = b4_callback
     view.add_item(b4)
 
-    b5 = Button(label="많이 더웠어요", emoji="🥵❤️")
+    b5 = Button(label="많이 더웠어요", emoji="🥵️")
     async def b5_callback(interaction):
         recommand[2] = 2
         await interaction.response.send_message("반영해서 다음엔 더 시원한 옷을 추천해드릴게요!")
