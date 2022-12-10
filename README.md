@@ -48,6 +48,22 @@ predict.py: 기온 별 옷 레벨 data set을 기반으로 선형 회귀를 이�
 user_data.py: 사용자의 데이터를 구글 스프레드시트에 저장하고 불러오는 함수를 모아놓은 파일입니다.
 ``` 
 
+## ❗️Google Sheets
+> #### user_DB <br>
+> 유저의 데이터를 저장하는 sheets입니다.
+>
+> |name|id|hot_level|user_temperature|clothes_level|
+> |---|---|---|---|---|
+> |유저명|유저 id|더위 타는 정도 레벨|외출 시간동안 평균 기온|추천한 옷 레벨|
+
+> #### temperature_clothes_level<br>
+> 기온 별 옷 레벨 data set입니다.
+>
+> |temperature|clothes_level|
+> |---|---|
+> |기온|옷 레벨|
+
+
 ## ❗️Reference
 - [[Discord.py] 1. 디스코드 봇 개발의 기초](https://www.jongung.com/199) 디스코드 봇과 파이썬 연결 과정 참고 및 디스코드 봇 기본 코드 인용
 
